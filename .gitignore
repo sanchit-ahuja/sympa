@@ -136,3 +136,8 @@ tensorboard
 out
 job-sympa.sh
 job_script.sh
+*ckpt_prod-hyeu
+*prod-hyhy-ckpt
+*.pkl
+*.zip
+*.vscode
