@@ -16,7 +16,8 @@ from sympa.utils import set_seed, write_results_to_file
 from sympa.math import symmetric_math as sm
 from sympa.math.caley_transform import inverse_caley_transform
 
-DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+DEVICE = 'cuda:0'
 if torch.cuda.is_available():
     torch.cuda.set_device(device=DEVICE)
 

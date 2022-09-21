@@ -1,6 +1,7 @@
 import argparse
 import random
 import torch
+from pathlib import Path
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel
 from torch.utils.data import DataLoader, TensorDataset, SequentialSampler
@@ -15,6 +16,8 @@ from sympa.model import Model
 def config_parser(parser):
     # Data options
     parser.add_argument("--data", required=True, type=str, help="Name of prep folder")
+    parser.add_argument("--data_path", required=True, type=str, help="Name of parent")
+    parser.add_argument("--ckpt_path", required=True, type=str, help="")
     parser.add_argument("--run_id", required=True, type=str, help="Name of model/run to export")
     # Model
     parser.add_argument("--model", default="spd", type=str, help="Model type: 'euclidean', 'poincare', "
@@ -65,7 +68,8 @@ def get_scheduler(optimizer, args):
 
 
 def load_training_data(args, log):
-    data_path = config.PREP_PATH / f"{args.data}/{config.PREPROCESSED_FILE}"
+    d_path = Path(args.data_path)
+    data_path = d_path / f"{args.data}/{config.PREPROCESSED_FILE}"
     log.info(f"Loading data from {data_path}")
     data = torch.load(str(data_path))
     id2node = data["id2node"]
@@ -94,7 +98,7 @@ def load_training_data(args, log):
     train_triples = TensorDataset(train_src_dst_ids, train_distances)
     train_sampler = DistributedSampler(train_triples, num_replicas=args.n_procs, rank=args.local_rank)
     train_loader = DataLoader(dataset=train_triples, batch_size=train_batch_size, shuffle=False, num_workers=0,
-                              pin_memory=True, sampler=train_sampler)
+                              pin_memory=False, sampler=train_sampler)
 
     valid_triples = TensorDataset(valid_src_dst_ids, valid_distances)
     valid_loader = DataLoader(valid_triples, sampler=SequentialSampler(valid_triples), batch_size=args.batch_size)
