@@ -244,7 +244,9 @@ def symeig(y: torch.Tensor):
     :return: eigenvalues (in ascending order): b x * x n
     :return: eigenvectors: b x * x n x n
     """
-    eigenvalues, eigenvectors = torch.symeig(y, eigenvectors=True)                  # evalues are in ascending order
+    # eigenvalues, eigenvectors = torch.symeig(y, eigenvectors=True)    
+    ## evalues are in ascending order
+    eigenvalues, eigenvectors = torch.linalg.eigh(y)
     return eigenvalues, eigenvectors
 
 

@@ -152,7 +152,8 @@ class TakagiFactorization:
         real_w = sm.squared_to_symmetric(real_w)
 
         # diagonalize Re(W)
-        real_b, real_z2 = torch.symeig(real_w, eigenvectors=True)               # real_b: b x n, z2: b x n x n
+        # real_b, real_z2 = torch.symeig(real_w, eigenvectors=True)               # real_b: b x n, z2: b x n x n
+        real_b, real_z2 = torch.linalg.eigh(real_w)
 
         # assert that real_z2 is orthogonal: it checks only on the first and last pairs of tensors for simplicity
         assert torch.allclose(torch.sum(real_z2[:, :, 0] * real_z2[:, :, 1]), self.zero)

@@ -74,7 +74,7 @@ def get_graph(args):
 
 
 def load_graph(args):
-    path = f"data_si_normal_graphs/{args.graph}/{args.graph}.edges"
+    path = f"data/{args.graph}/{args.graph}.edges"
     graph = nx.Graph()
     with open(path, "r") as f:
         for line in f:
