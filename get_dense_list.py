@@ -1,6 +1,6 @@
 import os
 import pickle
-from sklearn.metrics.pairwise import cosine_similarity
+# from sklearn.metrics.pairwise import cosine_similarity
 
 import numpy as np
 
@@ -18,7 +18,7 @@ def get_dense_list(adj_matrix):
             if adj_matrix[i, j] == 1:
                 edge_list.append((i, j, 1))
     # return the list of edges
-    return edge_list
+    return tuple(edge_list)
 
 
 def main(cosine_graph=False):
@@ -69,14 +69,14 @@ def main(cosine_graph=False):
 
 
 def get_dense_list_2():
-    with open("si_digraph_dgl_time_large.pkl", "rb") as f:
+    with open("data/si_digraph_dgl_time_large (1).pkl", "rb") as f:
         # load the pickle file
         data = pickle.load(f)
     list_file_name = "graph_list"
     file_dir = "data_si_normal"
     # if file_dir does not exist, create it
 
-    edge_lists = []
+    edge_lists = set()
     for i, ds in enumerate(data):
         print("Processing dataset {}".format(i))
         # print(ds)
@@ -84,7 +84,7 @@ def get_dense_list_2():
         adj_matrix = adj_matrix.toarray()
         edge_list = get_dense_list(adj_matrix)
         bert_emb = ds.ndata["x"]
-        edge_lists.append(edge_list)
+        edge_lists.add(edge_list)
 
     with open("si_complete_graph.edges", "w") as f:
         for edges in edge_lists:
